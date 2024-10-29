@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Öğrenci Bilgileri</title>
+    <style>
+        /* Sayfa Genel Stili */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        h2 {
+            color: #ff4500;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Öğrenci Bilgisi Alanı Stili */
+        .info {
+            color: #333;
+            font-size: 18px;
+            background-color: #fff8dc;
+            border: 1px solid #ff4500;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tablo Stili */
+        table {
+            width: 80%;
+            max-width: 500px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ff4500;
+            color: white;
+            font-size: 16px;
+        }
+
+        td {
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        /* Hover Efekti */
+        td:hover {
+            background-color: #ffecd9;
+            color: #ff4500;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h2>Öğrenciye Tıklandığında Bilgilerin Ekrana Getirilmesi</h2>
+    
+    <div class="info" id="studentInfo">Bir öğrencinin bilgilerini görmek için numara veya adsoyad üzerine tıklayın.</div>
+
+    <table>
+        <tr>
+            <th>Numara</th>
+            <th>Ad Soyad</th>
+        </tr>
+        <tr onclick="showStudentInfo('111111')">
+            <td>111111</td>
+            <td>İlayda Akyıldız</td>
+        </tr>
+        <tr onclick="showStudentInfo('222222')">
+            <td>222222</td>
+            <td>Ali Eren Özgen</td>
+        </tr>
+        <tr onclick="showStudentInfo('333333')">
+            <td>333333</td>
+            <td>Duygu Kaya</td>
+        </tr>
+        <tr onclick="showStudentInfo('444444')">
+            <td>444444</td>
+            <td>Mauro İcardi</td>
+        </tr>
+    </table>
+
+    <script>
+        function showStudentInfo(numara) {
+            const xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    const xmlDoc = this.responseXML;
+                    const students = xmlDoc.getElementsByTagName("student");
+                    
+                    for (let i = 0; i < students.length; i++) {
+                        const studentNumara = students[i].getElementsByTagName("numara")[0].childNodes[0].nodeValue;
+                        if (studentNumara === numara) {
+                            const adsoyad = students[i].getElementsByTagName("adsoyad")[0].childNodes[0].nodeValue;
+                            const bolum = students[i].getElementsByTagName("bolum")[0].childNodes[0].nodeValue;
+                            const sinif = students[i].getElementsByTagName("sinif")[0].childNodes[0].nodeValue;
+                            
+                            document.getElementById("studentInfo").innerHTML = 
+                                "<strong>Numara:</strong> " + numara + "<br>" +
+                                "<strong>AdSoyad:</strong> " + adsoyad + "<br>" +
+                                "<strong>Bölüm:</strong> " + bolum + "<br>" +
+                                "<strong>Sınıf:</strong> " + sinif;
+                            break;
+                        }
+                    }
+                }
+            };
+            xhttp.open("GET", "students.xml", true);
+            xhttp.send();
+        }
+    </script>
+</body>
+</html>
